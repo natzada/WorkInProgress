@@ -1,0 +1,7 @@
+@import "tailwindcss";
+
+@theme {
+    --color-lightbg: #7C9DD4;
+    --font-title: Archivo Black;
+    --font-body: Poppins;
+}
