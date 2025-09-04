@@ -1,7 +1,18 @@
 @import "tailwindcss";
+@import "@fontsource/archivo-black/index.css";
+
+html, body {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+body {
+    overflow: hidden;
+}
 
 @theme {
-    --color-lightbg: #7C9DD4;
-    --font-title: Archivo Black;
-    --font-body: Poppins;
+    --color-lightbg: #40516d;
+    --color-icon: #7a8dab;
+    --font-title: 'Archivo Black', sans-serif;
 }
