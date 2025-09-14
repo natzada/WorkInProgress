@@ -100,7 +100,7 @@ const Register: React.FC = () => {
               </div>
               <button
                 onClick={handleNext}
-                className="bg-black text-container font-bold font-title p-2 rounded-lg mt-4 hover:bg-gray-800"
+                className="bg-black text-container font-bold font-title p-2 rounded-lg mt-4 hover:bg-gray-800 cursor-pointer"
               >
                 PRÓXIMO
               </button>
@@ -133,13 +133,13 @@ const Register: React.FC = () => {
               <div className="flex gap-4 mt-2">
                 <button
                   onClick={() => setStep(1)}
-                  className="bg-black text-container w-28 font-bold font-title p-2 rounded-xl hover:bg-gray-600"
+                  className="bg-black text-container w-28 font-bold font-title p-2 rounded-xl hover:bg-gray-600 cursor-pointer"
                 >
                   VOLTAR
                 </button>
                 <button
                   onClick={() => alert("Cadastro concluído!")}
-                  className="bg-black text-container font-bold font-title p-2 rounded-xl hover:bg-gray-800 w-28"
+                  className="bg-black text-container font-bold font-title p-2 rounded-xl hover:bg-gray-800 w-28 cursor-pointer"
                 >
                   FINALIZAR
                 </button>
