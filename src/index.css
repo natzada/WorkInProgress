@@ -5,14 +5,18 @@ html, body {
     padding: 0;
     margin: 0;
     box-sizing: border-box;
+    height: 100vh;
 }
 
 body {
-    overflow: hidden;
+    overflow-x: hidden;
 }
 
 @theme {
+    --color-footer: #1E1E1E;
     --color-lightbg: #40516d;
     --color-icon: #7a8dab;
+    --color-container: #a9c3ee;
+    --color-placeholder: #BDD5FB;
     --font-title: 'Archivo Black', sans-serif;
 }
