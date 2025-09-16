@@ -21,10 +21,10 @@ const Footer = () => {
         <div className="space-y-4">
           <h3 className="text-white text-xl font-semibold">Navegue</h3>
           <ul className="space-y-2 text-neutral-400">
-            <li>Início</li>
-            <li>Compras</li>
-            <li>Tutoriais</li>
-            <li>Funcionalidades</li>
+            <li className='cursor-pointer hover:text-neutral-300'>Início</li>
+            <li className='cursor-pointer hover:text-neutral-300'>Compras</li>
+            <li className='cursor-pointer hover:text-neutral-300'>Tutoriais</li>
+            <li className='cursor-pointer hover:text-neutral-300'>Funcionalidades</li>
           </ul>
         </div>
 
@@ -34,9 +34,9 @@ const Footer = () => {
               Siga a WIP e acompanhe dicas, novidades e conteúdos para seu negócio crescer:
             </p>
             <div className="flex space-x-4">
-              <FontAwesomeIcon icon={faInstagram} className="text-2xl text-white" />
-              <FontAwesomeIcon icon={faLinkedinIn} className="text-2xl text-white px-2 border-l-2 border-r-2" />
-              <FontAwesomeIcon icon={faYoutube} className="text-2xl text-white" />
+              <FontAwesomeIcon icon={faInstagram} className="text-2xl text-white/70 cursor-pointer hover:text-white" />
+              <FontAwesomeIcon icon={faLinkedinIn} className="text-2xl text-white/70 px-2 border-l-2 border-r-2 cursor-pointer hover:text-white" />
+              <FontAwesomeIcon icon={faYoutube} className="text-2xl text-white/70 cursor-pointer hover:text-white" />
             </div>
           </div>
 

@@ -5,18 +5,12 @@ import { FaSortDown } from "react-icons/fa";
 
 interface IndexProps {
   registerRef: RefObject<HTMLDivElement | null>;
+  aboutRef: RefObject<HTMLDivElement | null>;
+  isLoggedIn: boolean;
+  scrollToSection: () => void;
 }
 
-export default function Index({ registerRef }: IndexProps) {
-  const scrollToRegister = () => {
-    if (registerRef.current) {
-      registerRef.current.scrollIntoView({ 
-        behavior: 'smooth',
-        block: 'start'
-      });
-    }
-  };
-
+export default function Index({ registerRef, aboutRef, isLoggedIn, scrollToSection }: IndexProps) {
   return (
     <div className="flex flex-col my-10">
       <div className="flex items-end justify-center h-screen flex-col w-screen p-2">
@@ -44,7 +38,7 @@ export default function Index({ registerRef }: IndexProps) {
         <div className="btn border-black border-5 rounded-full mb-20">
           <button 
             className="pb-4 px-2 border-icon border-5 rounded-full text-center text-icon bg-black cursor-pointer" 
-            onClick={scrollToRegister}
+            onClick={scrollToSection}
           >
             <FaSortDown size={40} />
           </button>

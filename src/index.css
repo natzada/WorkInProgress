@@ -1,14 +1,16 @@
 @import "tailwindcss";
 @import "@fontsource/archivo-black/index.css";
 
-html, body {
-    padding: 0;
-    margin: 0;
-    box-sizing: border-box;
-    height: 100vh;
+html {
+    padding: 0 !important;
+    margin: 0 !important;
+    overflow-x: hidden;
+    min-height: screen;
 }
 
 body {
+    padding: 0 !important;
+    margin: 0 !important;
     overflow-x: hidden;
 }
 
