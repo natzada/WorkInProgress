@@ -12,7 +12,7 @@ interface IndexProps {
 
 export default function Index({ registerRef, aboutRef, isLoggedIn, scrollToSection }: IndexProps) {
   return (
-    <div className="flex flex-col my-10">
+    <div className="flex flex-col">
       <div className="flex items-end justify-center h-screen flex-col w-screen p-2">
         <img
           src={logo}
@@ -34,7 +34,7 @@ export default function Index({ registerRef, aboutRef, isLoggedIn, scrollToSecti
         />
       </div>
 
-      <div className="flex justify-center absolute top-8/9 left-200">
+      <div className="flex absolute top-7/9 left-180">
         <div className="btn border-black border-5 rounded-full mb-20">
           <button 
             className="pb-4 px-2 border-icon border-5 rounded-full text-center text-icon bg-black cursor-pointer" 

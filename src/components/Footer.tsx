@@ -4,7 +4,7 @@ import { faInstagram, faLinkedinIn, faYoutube } from '@fortawesome/free-brands-s
 const Footer = () => {
   return (
     <footer className="bg-footer text-white py-12 px-6">
-      <div className="max-w-6xl mx-auto grid grid-cols md:grid-cols-2 gap-12">
+      <div className="max-w-6xl mx-auto grid grid-cols md:grid-cols-2 gap-12 justify-center items-center">
         {/* WIP Info */}
         <div className="space-y-4">
           <div className="text-white text-xl font-semibold">
@@ -15,6 +15,7 @@ const Footer = () => {
             Oferecemos ferramentas simples para controle, organização e crescimento.<br />
             Porque empreender não precisa ser complicado.
           </p>
+          
         </div>
 
         {/* Navigation */}

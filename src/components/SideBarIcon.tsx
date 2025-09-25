@@ -1,114 +1,115 @@
-import styled from 'styled-components';
+import React from 'react';
 
-const Tooltip = () => {
-  return (
-    <StyledWrapper>
-      <div className="button">
-        <div className="button-wrapper">
-          <div className="text">Estoque</div>
-          <span className="icon">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512">
-              <path fill="#fff" d="M128.1 0c-35.3 0-64 28.7-64 64l0 384c0 35.3 28.7 64 64 64l146.2 0 10.9-54.5c4.3-21.7 15-41.6 30.6-57.2l132.2-132.2 0-97.5c0-17-6.7-33.3-18.7-45.3L322.8 18.7C310.8 6.7 294.5 0 277.6 0L128.1 0zM389.6 176l-93.5 0c-13.3 0-24-10.7-24-24l0-93.5 117.5 117.5zM332.3 466.9l-11.9 59.6c-.2 .9-.3 1.9-.3 2.9 0 8 6.5 14.6 14.6 14.6 1 0 1.9-.1 2.9-.3l59.6-11.9c12.4-2.5 23.8-8.6 32.7-17.5l118.9-118.9-80-80-118.9 118.9c-8.9 8.9-15 20.3-17.5 32.7zm267.8-123c22.1-22.1 22.1-57.9 0-80s-57.9-22.1-80 0l-28.8 28.8 80 80 28.8-28.8z" /></svg>
-          </span>
-        </div>
-      </div>
-    </StyledWrapper>
-  );
+interface IconProps {
+  size?: number;
+  color?: string;
+  className?: string;
 }
 
-const StyledWrapper = styled.div`
-  .button {
-    --width: 100px;
-    --height: 35px;
-    --button-color: #222;
-    width: var(--width);
-    height: var(--height);
-    background: var(--button-color);
-    position: relative;
-    text-align: center;
-    border-radius: 0.5em;
-    font-family: "Arial";
-    transition: background 0.7s;
-  }
+const ShoppingIcon: React.FC<IconProps> = ({ size = 24, color = 'currentColor', className }) => (
+  <svg 
+    width={size} 
+    height={size} 
+    viewBox="0 0 24 24" 
+    fill="none" 
+    xmlns="http://www.w3.org/2000/svg"
+    className={className}
+  >
+    <path 
+      d="M3 3H5L5.4 5M7 13H17L21 5H5.4M7 13L5.4 5M7 13L4.707 15.293C4.077 15.923 4.523 17 5.414 17H17M17 17C15.895 17 15 17.895 15 19C15 20.105 15.895 21 17 21C18.105 21 19 20.105 19 19C19 17.895 18.105 17 17 17ZM9 19C9 20.105 8.105 21 7 21C5.895 21 5 20.105 5 19C5 17.895 5.895 17 7 17C8.105 17 9 17.895 9 19Z" 
+      stroke={color} 
+      strokeWidth="2" 
+      strokeLinecap="round" 
+      strokeLinejoin="round"
+    />
+  </svg>
+);
 
-  .button::before {
-    position: absolute;
-    background-color: #555;
-    font-size: 0.9rem;
-    color: #fff;
-    border-radius: 0.25em;
-  }
+const AccountIcon: React.FC<IconProps> = ({ size = 24, color = 'currentColor', className }) => (
+  <svg 
+    width={size} 
+    height={size} 
+    viewBox="0 0 24 24" 
+    fill="none" 
+    xmlns="http://www.w3.org/2000/svg"
+    className={className}
+  >
+    <path 
+      d="M12 12C14.2091 12 16 10.2091 16 8C16 5.79086 14.2091 4 12 4C9.79086 4 8 5.79086 8 8C8 10.2091 9.79086 12 12 12Z" 
+      stroke={color} 
+      strokeWidth="2" 
+      strokeLinecap="round" 
+      strokeLinejoin="round"
+    />
+    <path 
+      d="M20 21C20 19.1435 19.2625 17.363 17.9497 16.0503C16.637 14.7375 14.8565 14 13 14H11C9.14348 14 7.36301 14.7375 6.05025 16.0503C4.7375 17.363 4 19.1435 4 21" 
+      stroke={color} 
+      strokeWidth="2" 
+      strokeLinecap="round" 
+      strokeLinejoin="round"
+    />
+  </svg>
+);
 
-  .button::after,
-  .button::before {
-    opacity: 0;
-    visibility: hidden;
-    transition: all 0.5s;
-  }
+const TutorialsIcon: React.FC<IconProps> = ({ size = 24, color = 'currentColor', className }) => (
+  <svg 
+    width={size} 
+    height={size} 
+    viewBox="0 0 24 24" 
+    fill="none" 
+    xmlns="http://www.w3.org/2000/svg"
+    className={className}
+  >
+    <path 
+      d="M12 14L12 18M12 10L12 10.5M19 3H5C3.89543 3 3 3.89543 3 5V19C3 20.1046 3.89543 21 5 21H19C20.1046 21 21 20.1046 21 19V5C21 3.89543 20.1046 3 19 3Z" 
+      stroke={color} 
+      strokeWidth="2" 
+      strokeLinecap="round" 
+      strokeLinejoin="round"
+    />
+    <path 
+      d="M9 7H15M9 11H11M9 15H13" 
+      stroke={color} 
+      strokeWidth="2" 
+      strokeLinecap="round" 
+      strokeLinejoin="round"
+    />
+  </svg>
+);
 
-  .text {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
+const StockIcon: React.FC<IconProps> = ({ size = 24, color = 'currentColor', className }) => (
+  <svg 
+    width={size} 
+    height={size} 
+    viewBox="0 0 24 24" 
+    fill="none" 
+    xmlns="http://www.w3.org/2000/svg"
+    className={className}
+  >
+    <path 
+      d="M9 5H7C5.89543 5 5 5.89543 5 7V19C5 20.1046 5.89543 21 7 21H17C18.1046 21 19 20.1046 19 19V7C19 5.89543 18.1046 5 17 5H15" 
+      stroke={color} 
+      strokeWidth="2" 
+      strokeLinecap="round" 
+      strokeLinejoin="round"
+    />
+    <path 
+      d="M12 12H15C15.5523 12 16 11.5523 16 11V8C16 7.44772 15.5523 7 15 7H12C11.4477 7 11 7.44772 11 8V11C11 11.5523 11.4477 12 12 12Z" 
+      stroke={color} 
+      strokeWidth="2" 
+      strokeLinecap="round" 
+      strokeLinejoin="round"
+    />
+    <path 
+      d="M9 3H15V5H9V3Z" 
+      stroke={color} 
+      strokeWidth="2" 
+      strokeLinecap="round" 
+      strokeLinejoin="round"
+    />
+  </svg>
+);
 
-  .button-wrapper,
-  .text,
-  .icon {
-    overflow: hidden;
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    left: 0;
-    color: #fff;
-  }
+// Componente de exemplo para mostrar como usar os ícones
 
-  .text {
-    top: 0;
-  }
-
-  .text,
-  .icon {
-    transition: top 0.5s;
-  }
-
-  .icon {
-    color: #fff;
-    top: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .icon svg {
-    width: 24px;
-    height: 24px;
-  }
-
-  .button:hover {
-    background: #222;
-  }
-
-  .button:hover .text {
-    top: -100%;
-  }
-
-  .button:hover .icon {
-    top: 0;
-  }
-
-  .button:hover:before,
-  .button:hover:after {
-    opacity: 1;
-    visibility: visible;
-  }
-
-  .button:hover:after {
-    bottom: calc(var(--height) + var(--gap-between-tooltip-to-button) - 20px);
-  }
-
-  .button:hover:before {
-    bottom: calc(var(--height) + var(--gap-between-tooltip-to-button));
-  }`;
-
-export default Tooltip;
+export { ShoppingIcon, AccountIcon, TutorialsIcon, StockIcon };

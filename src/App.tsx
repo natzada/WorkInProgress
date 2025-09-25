@@ -1,10 +1,12 @@
 import { useRef, useState } from "react";
 import "./App.css";
-import Index from "./pages/Index";
+// import Index from "./pages/Index";
 import Register from "./components/Register";
 import About from "./components/About"; // Importe o componente About
 import Footer from "./components/Footer";
 import texture from "./assets/images/texturebg.png";
+import Sidebar from "./components/SideBar";
+import Profile from "./components/Profile";
 
 function App() {
   const registerRef = useRef<HTMLDivElement>(null);
@@ -45,7 +47,9 @@ function App() {
           backgroundBlendMode: 'overlay' 
         }}
       >
-        <Index 
+        <Profile />
+        {/* <Sidebar /> */}
+        {/* <Index 
           registerRef={registerRef} 
           aboutRef={aboutRef}
           isLoggedIn={isLoggedIn}
@@ -55,18 +59,18 @@ function App() {
         />
         
         {/* Seção Register - visível apenas quando não logado */}
-        {!isLoggedIn && (
+        {/* {!isLoggedIn && (
           <div ref={registerRef}>
             <Register onLogin={handleLogin} />
           </div>
-        )}
+        )} */}
         
         {/* Seção About - visível apenas quando logado */}
-        {isLoggedIn && (
-          <div ref={aboutRef}>
-            <About />
-          </div>
-        )}
+        {/* {isLoggedIn && ( */}
+          {/* // <div ref={aboutRef}> */}
+            {/* <About /> */}
+          {/* </div> */}
+        {/* // )} */}
       </div>
 
       <Footer />
