@@ -1,17 +1,14 @@
 import React, { useState, type FC, type JSX } from "react";
 
-// Componentes de Ícones
+// IconProps interface
 interface IconProps {
   size?: number;
   color?: string;
   className?: string;
 }
 
-const MenuIcon: React.FC<IconProps> = ({
-  size = 24,
-  color = "currentColor",
-  className,
-}) => (
+// MenuIcon Component
+const MenuIcon: FC<IconProps> = ({ size = 24, color = "currentColor", className }) => (
   <svg
     className={className}
     aria-hidden="true"
@@ -23,18 +20,15 @@ const MenuIcon: React.FC<IconProps> = ({
   >
     <path
       stroke={color}
-      stroke-linecap="round"
-      stroke-width="2"
+      strokeLinecap="round"
+      strokeWidth="2"
       d="M5 7h14M5 12h14M5 17h14"
     />
   </svg>
 );
 
-const ShoppingIcon: React.FC<IconProps> = ({
-  size = 24,
-  color = "currentColor",
-  className,
-}) => (
+// ShoppingIcon Component
+const ShoppingIcon: FC<IconProps> = ({ size = 24, color = "currentColor", className }) => (
   <svg
     width={size}
     height={size}
@@ -53,11 +47,8 @@ const ShoppingIcon: React.FC<IconProps> = ({
   </svg>
 );
 
-const AccountIcon: React.FC<IconProps> = ({
-  size = 24,
-  color = "currentColor",
-  className,
-}) => (
+// AccountIcon Component
+const AccountIcon: FC<IconProps> = ({ size = 24, color = "currentColor", className }) => (
   <svg
     width={size}
     height={size}
@@ -83,11 +74,8 @@ const AccountIcon: React.FC<IconProps> = ({
   </svg>
 );
 
-const TutorialsIcon: React.FC<IconProps> = ({
-  size = 24,
-  color = "currentColor",
-  className,
-}) => (
+// TutorialsIcon Component
+const TutorialsIcon: FC<IconProps> = ({ size = 24, color = "currentColor", className }) => (
   <svg
     width={size}
     height={size}
@@ -113,11 +101,8 @@ const TutorialsIcon: React.FC<IconProps> = ({
   </svg>
 );
 
-const StockIcon: React.FC<IconProps> = ({
-  size = 24,
-  color = "currentColor",
-  className,
-}) => (
+// StockIcon Component
+const StockIcon: FC<IconProps> = ({ size = 24, color = "currentColor", className }) => (
   <svg
     width={size}
     height={size}
@@ -150,41 +135,51 @@ const StockIcon: React.FC<IconProps> = ({
   </svg>
 );
 
-// Define types for the SidebarIcon props
+// SidebarIcon Props
 interface SidebarIconProps {
   icon: JSX.Element;
   tooltip: string;
   isActive?: boolean;
+  isExpanded: boolean;
   onClick?: () => void;
 }
 
-// Sidebar Icon Component
+// SidebarIcon Component
 const SidebarIcon: FC<SidebarIconProps> = ({
   icon,
   tooltip,
   isActive = false,
+  isExpanded,
   onClick,
 }) => {
   return (
     <div
-      className={`relative flex items-center justify-center h-12 w-12 mt-2 mb-2 mx-auto rounded-lg transition-all duration-300 ease-linear cursor-pointer group ${
+      className={`relative flex items-center h-12 mt-2 mb-2 mx-auto rounded-lg transition-all duration-300 ease-linear cursor-pointer group ${
         isActive
           ? "bg-black text-white shadow-lg"
-          : "text-black hover:bg-black hover:text-gray-100"
-      }`}
+          : "text-white hover:bg-black hover:text-gray-100"
+      } ${isExpanded ? "w-full px-4 justify-start" : "w-12 justify-center"}`}
       onClick={onClick}
     >
-      {icon}
-      <span className="absolute left-14 bg-gray-800/20 text-white text-xs rounded-md px-2 py-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap">
-        {tooltip}
-      </span>
+      <div className="flex items-center">
+        {icon}
+        {isExpanded && (
+          <span className="ml-4 text-white text-sm font-medium">{tooltip}</span>
+        )}
+      </div>
+      {!isExpanded && (
+        <span className="absolute left-14 bg-gray-800/80 text-white text-xs rounded-md px-2 py-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap">
+          {tooltip}
+        </span>
+      )}
     </div>
   );
 };
 
 // Main Sidebar Component
 const Sidebar: FC = () => {
-  const [activeItem, setActiveItem] = useState("shopping");
+  const [activeItem, setActiveItem] = useState<string>("shopping");
+  const [isExpanded, setIsExpanded] = useState<boolean>(false);
 
   const menuItems = [
     { id: "menu", icon: <MenuIcon />, tooltip: "Menu" },
@@ -194,10 +189,19 @@ const Sidebar: FC = () => {
     { id: "stock", icon: <StockIcon />, tooltip: "Estoque" },
   ];
 
+  const handleMenuClick = () => {
+    if (menuItems.find((item) => item.id === "menu")) {
+      setIsExpanded(!isExpanded);
+    }
+  };
+
   return (
     <div className="flex min-h-screen">
-      {/* Sidebar */}
-      <div className="w-16 flex flex-col">
+      <div
+        className={`flex flex-col transition-all duration-300 ease-in-out ${
+          isExpanded ? "w-64 bg-gray-800/70" : "w-16"
+        }`}
+      >
         <div className="flex flex-col items-center mt-6">
           {menuItems.map((item) => (
             <SidebarIcon
@@ -205,7 +209,8 @@ const Sidebar: FC = () => {
               icon={item.icon}
               tooltip={item.tooltip}
               isActive={activeItem === item.id}
-              onClick={() => setActiveItem(item.id)}
+              isExpanded={isExpanded}
+              onClick={item.id === "menu" ? handleMenuClick : () => setActiveItem(item.id)}
             />
           ))}
         </div>

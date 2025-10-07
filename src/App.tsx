@@ -1,42 +1,45 @@
-import { useRef, useState } from "react";
+// import { useRef, useState } from "react";
 import "./App.css";
-// import Index from "./pages/Index";
-import Register from "./components/Register";
-import About from "./components/About"; // Importe o componente About
+// import Register from "./components/Register";
+// import About from "./components/About"; 
 import Footer from "./components/Footer";
 import texture from "./assets/images/texturebg.png";
-import Sidebar from "./components/SideBar";
-import Profile from "./components/Profile";
+import logo from "../public/WIP-logo.png";
+import rummykub from "../src/assets/images/rummykub.logo.png";
+// import Stock from "./components/Stock";
+// import Sidebar from "./components/SideBar";
+// import Profile from "./components/Profile";
+// import Index from "./pages/Index";
 
 function App() {
-  const registerRef = useRef<HTMLDivElement>(null);
-  const aboutRef = useRef<HTMLDivElement>(null);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  // const registerRef = useRef<HTMLDivElement>(null);
+  // const aboutRef = useRef<HTMLDivElement>(null);
+  // const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   // Função para rolar até a seção apropriada
-  const scrollToSection = () => {
-    if (isLoggedIn && aboutRef.current) {
-      aboutRef.current.scrollIntoView({ behavior: "smooth" });
-    } else if (!isLoggedIn && registerRef.current) {
-      registerRef.current.scrollIntoView({ behavior: "smooth" });
-    }
-  };
+  // const scrollToSection = () => {
+  //   if (isLoggedIn && aboutRef.current) {
+  //     aboutRef.current.scrollIntoView({ behavior: "smooth" });
+  //   } else if (!isLoggedIn && registerRef.current) {
+  //     registerRef.current.scrollIntoView({ behavior: "smooth" });
+  //   }
+  // };
 
   // Função para simular login (substitua pela sua lógica real)
-  const handleLogin = () => {
-    setIsLoggedIn(true);
-    // Após o login, rola para a seção About
-    setTimeout(() => {
-      if (aboutRef.current) {
-        aboutRef.current.scrollIntoView({ behavior: "smooth" });
-      }
-    }, 100);
-  };
+  // const handleLogin = () => {
+  //   setIsLoggedIn(true);
+  //   // Após o login, rola para a seção About
+  //   setTimeout(() => {
+  //     if (aboutRef.current) {
+  //       aboutRef.current.scrollIntoView({ behavior: "smooth" });
+  //     }
+  //   }, 100);
+  // };
 
   // Função para logout
-  const handleLogout = () => {
-    setIsLoggedIn(false);
-  };
+  // const handleLogout = () => {
+  //   setIsLoggedIn(false);
+  // };
 
   return (
     <div className="App">
@@ -47,7 +50,13 @@ function App() {
           backgroundBlendMode: 'overlay' 
         }}
       >
-        <Profile />
+        <img
+          src={logo}
+          alt="Logo WIP"
+          className="w-20 fixed top-0 left-0 m-4"
+        />
+        {/* <Stock /> */}
+        {/* <Profile />  */}
         {/* <Sidebar /> */}
         {/* <Index 
           registerRef={registerRef} 
@@ -56,7 +65,7 @@ function App() {
           onLogin={handleLogin}
           onLogout={handleLogout}
           scrollToSection={scrollToSection}
-        />
+        /> */}
         
         {/* Seção Register - visível apenas quando não logado */}
         {/* {!isLoggedIn && (
@@ -66,11 +75,16 @@ function App() {
         )} */}
         
         {/* Seção About - visível apenas quando logado */}
-        {/* {isLoggedIn && ( */}
-          {/* // <div ref={aboutRef}> */}
-            {/* <About /> */}
-          {/* </div> */}
-        {/* // )} */}
+         {/* {isLoggedIn && (
+          <div ref={aboutRef}>
+            <About />
+          </div>
+        )} */}
+        <img 
+          src={rummykub} 
+          alt="Logo da empresa" 
+          className="w-20 fixed bottom-0 right-0 m-4"
+        />
       </div>
 
       <Footer />

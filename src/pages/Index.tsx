@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import type { RefObject } from "react";
 import logo from "../../public/WIP-logo.png";
 import rummykub from "../assets/images/rummykub.logo.png";
