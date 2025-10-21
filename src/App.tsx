@@ -1,15 +1,26 @@
 import { useRef, useState } from "react";
 import "./App.css";
-import Index from "./pages/Index";
 import Register from "./components/Register";
-import About from "./components/About"; // Importe o componente About
+import About from "./components/About"; 
 import Footer from "./components/Footer";
 import texture from "./assets/images/texturebg.png";
+import logo from "../public/WIP-logo.png";
+import rummykub from "../src/assets/images/rummykub.logo.png";
+import Tutorials from "./components/Tutorials";
+import Stock from "./components/Stock";
+import Sidebar from "./components/SideBar";
+import Profile from "./components/Profile";
+import Index from "./pages/Index";
+import { AuthProvider, useAuth } from "./contexts/AuthContext";
 
-function App() {
+// Tipo para as páginas disponíveis
+type Page = 'home' | 'register' | 'about' | 'tutorials' | 'stock' | 'profile';
+
+function AppContent() {
   const registerRef = useRef<HTMLDivElement>(null);
   const aboutRef = useRef<HTMLDivElement>(null);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [currentPage, setCurrentPage] = useState<Page>('home');
+  const { isLoggedIn } = useAuth();
 
   // Função para rolar até a seção apropriada
   const scrollToSection = () => {
@@ -20,20 +31,66 @@ function App() {
     }
   };
 
-  // Função para simular login (substitua pela sua lógica real)
-  const handleLogin = () => {
-    setIsLoggedIn(true);
-    // Após o login, rola para a seção About
-    setTimeout(() => {
-      if (aboutRef.current) {
-        aboutRef.current.scrollIntoView({ behavior: "smooth" });
-      }
-    }, 100);
+  // Função para navegar entre páginas
+  const handleNavigation = (page: Page) => {
+    setCurrentPage(page);
   };
 
-  // Função para logout
-  const handleLogout = () => {
-    setIsLoggedIn(false);
+  // Renderizar o conteúdo baseado na página atual e estado de login
+  const renderContent = () => {
+    // Se não estiver logado, mostra apenas Index ou Register
+    if (!isLoggedIn) {
+      if (currentPage === 'register') {
+        return <Register onLogin={() => {}} />;
+      }
+      return (
+        <Index 
+          registerRef={registerRef} 
+          aboutRef={aboutRef}
+          isLoggedIn={isLoggedIn}
+          scrollToSection={scrollToSection}
+          onNavigate={handleNavigation}
+        />
+      );
+    }
+
+    // Se estiver logado, mostra as páginas protegidas
+    switch (currentPage) {
+      case 'home':
+        return (
+          <div>
+            <Index 
+              registerRef={registerRef} 
+              aboutRef={aboutRef}
+              isLoggedIn={isLoggedIn}
+              scrollToSection={scrollToSection}
+              onNavigate={handleNavigation}
+            />
+            <About />
+          </div>
+        );
+      case 'about':
+        return <About />;
+      case 'tutorials':
+        return <Tutorials />;
+      case 'stock':
+        return <Stock />;
+      case 'profile':
+        return <Profile />;
+      default:
+        return (
+          <div>
+            <Index 
+              registerRef={registerRef} 
+              aboutRef={aboutRef}
+              isLoggedIn={isLoggedIn}
+              scrollToSection={scrollToSection}
+              onNavigate={handleNavigation}
+            />
+            <About />
+          </div>
+        );
+    }
   };
 
   return (
@@ -45,32 +102,42 @@ function App() {
           backgroundBlendMode: 'overlay' 
         }}
       >
-        <Index 
-          registerRef={registerRef} 
-          aboutRef={aboutRef}
-          isLoggedIn={isLoggedIn}
-          onLogin={handleLogin}
-          onLogout={handleLogout}
-          scrollToSection={scrollToSection}
+        {/* Header com logo */}
+        <img
+          src={logo}
+          alt="Logo WIP"
+          className="w-20 fixed top-0 left-0 m-4 z-50"
         />
-        
-        {/* Seção Register - visível apenas quando não logado */}
-        {!isLoggedIn && (
-          <div ref={registerRef}>
-            <Register onLogin={handleLogin} />
-          </div>
-        )}
-        
-        {/* Seção About - visível apenas quando logado */}
-        {isLoggedIn && (
-          <div ref={aboutRef}>
-            <About />
-          </div>
-        )}
-      </div>
 
-      <Footer />
+        {/* Sidebar só aparece quando logado - REMOVA onLogout */}
+        {isLoggedIn && (
+          <Sidebar onNavigate={handleNavigation} currentPage={currentPage} />
+        )}
+
+        {/* Conteúdo principal com margem condicional */}
+        <main className={isLoggedIn ? "ml-16" : ""}>
+          {renderContent()}
+        </main>
+
+        {/* Footer sempre visível */}
+        <Footer />
+
+        {/* Logo no canto inferior direito */}
+        <img 
+          src={rummykub} 
+          alt="Logo da empresa" 
+          className="w-20 fixed bottom-0 right-0 m-4 z-50"
+        />
+      </div>
     </div>
+  );
+}
+
+function App() {
+  return (
+    <AuthProvider>
+      <AppContent />
+    </AuthProvider>
   );
 }
 
