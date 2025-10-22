@@ -1,35 +1,40 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import type { RefObject } from "react";
 import logo from "../../public/WIP-logo.png";
 import rummykub from "../assets/images/rummykub.logo.png";
 import { FaSortDown } from "react-icons/fa";
+import Register from "../components/Register";
+import About from "../components/About";
+import { useLoadingDelay } from "../hooks/useLoadingDelay";
+import LoadingPage from "../components/LoadingPage";
+
+
 type Page = 'home' | 'register' | 'about' | 'tutorials' | 'stock' | 'profile';
 
 interface IndexProps {
-  registerRef: RefObject<HTMLDivElement | null>;
-  aboutRef: RefObject<HTMLDivElement | null>;
+  navigateRef: RefObject<HTMLDivElement | null>;
   isLoggedIn: boolean;
   scrollToSection: () => void;
   onNavigate?: (page: Page) => void;
-  onLogin?: () => void; // Adicione esta linha
-  onLogout?: () => void; // Adicione esta linha também para consistência
+  onLogin?: () => void;
+  onLogout?: () => void;
 }
 
-
-export default function Index({ registerRef, aboutRef, isLoggedIn, scrollToSection, onNavigate }: IndexProps) {
+export default function Index({ navigateRef, isLoggedIn, scrollToSection }: IndexProps) {
   
+  const isLoadingDelay = useLoadingDelay(1000);
+
   const handleGetStarted = () => {
-    if (isLoggedIn) {
-      // Se já está logado, navega para o dashboard
-      onNavigate?.('home');
-    } else {
-      // Se não está logado, rola para o register
-      scrollToSection();
-    }
+    // Apenas faz o scroll suave até a seção
+    scrollToSection();
   };
+
+  if (isLoadingDelay) {
+    <LoadingPage />;
+  }
 
   return (
     <div className="flex flex-col">
+      {/* Seção Hero */}
       <div className="flex items-end justify-center h-screen flex-col w-screen p-2">
         <img
           src={logo}
@@ -51,7 +56,8 @@ export default function Index({ registerRef, aboutRef, isLoggedIn, scrollToSecti
         />
       </div>
 
-      <div className="flex absolute top-7/9 left-180">
+      {/* Botão de scroll */}
+      <div className="flex absolute top-7/9 left-1/2 ">
         <div className="btn border-black border-5 rounded-full mb-20">
           <button 
             className="pb-4 px-2 border-icon border-5 rounded-full text-center text-icon bg-black cursor-pointer" 
@@ -60,6 +66,17 @@ export default function Index({ registerRef, aboutRef, isLoggedIn, scrollToSecti
             <FaSortDown size={40} />
           </button>
         </div>
+      </div>
+
+      {/* Seção de destino - mostra Register ou About baseado no login */}
+      <div ref={navigateRef} className="min-h-screen">
+        {isLoggedIn ? (
+          // Se está logado, mostra a seção About
+          <About />
+        ) : (
+          // Se não está logado, mostra a seção Register
+          <Register />
+        )}
       </div>
     </div>
   );

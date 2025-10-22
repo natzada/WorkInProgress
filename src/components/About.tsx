@@ -1,6 +1,6 @@
 function About() {
   return (
-    <div className="w-screen flex flex-col justify-center items-center">
+    <div className="w-screen mt-40 flex flex-col justify-center items-center">
       <h1 className="text-black font-title text-4xl font-bold">
         QUEM SOMOS NÓS?
       </h1>

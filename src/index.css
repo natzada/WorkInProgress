@@ -2,23 +2,45 @@
 @import "@fontsource/archivo-black/index.css";
 
 html {
-    padding: 0 !important;
-    margin: 0 !important;
-    overflow-x: hidden;
-    min-height: screen;
+  padding: 0 !important;
+  margin: 0 !important;
+  overflow-x: hidden;
+  min-height: screen;
+  scrollbar-width: thin; 
+  scrollbar-color: #40516d #95b1dd;
+}
+
+/* Chrome, Edge, Safari */
+::-webkit-scrollbar {
+  width: 10px;                       /* Largura da barra vertical */
+  height: 10px;                      /* Altura da barra horizontal */
+}
+
+/* Parte de fundo (trilho) */
+::-webkit-scrollbar-track {
+  background: #95b1dd05;               /* Cor do trilho */
+  border-radius: 10px;               /* Bordas arredondadas */
+}
+
+/* A própria barrinha (thumb) */
+::-webkit-scrollbar-thumb {
+  background: #40516d;                  /* Cor da barrinha */
+  border-radius: 10px;               /* Bordas arredondadas */
 }
 
 body {
-    padding: 0 !important;
-    margin: 0 !important;
-    overflow-x: hidden;
+  padding: 0 !important;
+  margin: 0 !important;
+  overflow-x: hidden;
 }
 
 @theme {
-    --color-footer: #1E1E1E;
-    --color-lightbg: #40516d;
-    --color-icon: #7a8dab;
-    --color-container: #a9c3ee;
-    --color-placeholder: #BDD5FB;
-    --font-title: 'Archivo Black', sans-serif;
+  --color-footer: #1e1e1e;
+  --color-lightbg: #40516d;
+  --color-icon: #7a8dab;
+  --color-container: #a9c3ee;
+  --color-placeholder: #bdd5fb;
+  --color-division: #95b1dd;
+  --color-link: #2b6cb0;
+  --font-title: "Archivo Black", sans-serif;
 }

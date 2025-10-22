@@ -1,15 +1,30 @@
+// src/components/Profile.tsx
 import React from "react";
 import pfp from "../assets/images/user.pfp.png";
-import { useAuth } from "../contexts/AuthContext";
+import { useAuth } from '../contexts/useAuth';
+import LoadingPage from "./LoadingPage";
+import { useLoadingDelay } from "../hooks/useLoadingDelay";
+import { useState } from "react";
 
 const Profile: React.FC = () => {
-  const { user, logout } = useAuth();
+  const isLoadingDelay = useLoadingDelay(1000);
+  const { currentUser, logout } = useAuth(); 
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
     if (window.confirm("Tem certeza que deseja sair?")) {
-      logout();
+      setIsLoggingOut(true);
+      try {
+        await logout();
+      } finally {
+        setIsLoggingOut(false);
+      }
     }
   };
+
+  if (isLoadingDelay || isLoggingOut) {
+    return <LoadingPage />;
+  }
 
   return (
     <div className="min-h-screen flex justify-center items-center">
@@ -20,8 +35,8 @@ const Profile: React.FC = () => {
             alt="User Avatar"
             className="rounded-full w-24 h-24 mb-2"
           />
-          <h2 className="text-lg font-semibold">{user?.name || "Seu Nome"}</h2>
-          <p className="text-sm text-gray-600">{user?.email || "usuario@email.com"}</p>
+          <h2 className="text-lg font-semibold">{currentUser?.username || "Seu Nome"}</h2>
+          <p className="text-sm text-gray-600">{currentUser?.email || "usuario@email.com"}</p>
         </div>
         <div className="col-span-1 grid grid-cols-2 gap-5">
           <button className="bg-placeholder w-60 p-4 rounded-lg flex flex-col items-center justify-center hover:bg-gray-200 transition-colors">
@@ -79,7 +94,7 @@ const Profile: React.FC = () => {
           </button>
           <button 
             onClick={handleLogout}
-            className="bg-red-500 text-white w-60 p-4 rounded-lg flex flex-col items-center justify-center hover:bg-red-600 transition-colors"
+            className="bg-placeholder text-black w-60 p-4 rounded-lg flex flex-col items-center justify-center hover:bg-red-600 transition-colors"
           >
             <svg
               className="w-15 h-15"

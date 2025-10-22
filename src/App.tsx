@@ -1,7 +1,15 @@
-import { useRef, useState } from "react";
+// src/App.tsx
+import { useRef } from "react";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  useNavigate,
+  useLocation,
+} from "react-router-dom";
 import "./App.css";
 import Register from "./components/Register";
-import About from "./components/About"; 
+import About from "./components/About";
 import Footer from "./components/Footer";
 import texture from "./assets/images/texturebg.png";
 import logo from "../public/WIP-logo.png";
@@ -11,121 +19,117 @@ import Stock from "./components/Stock";
 import Sidebar from "./components/SideBar";
 import Profile from "./components/Profile";
 import Index from "./pages/Index";
-import { AuthProvider, useAuth } from "./contexts/AuthContext";
-
-// Tipo para as páginas disponíveis
-type Page = 'home' | 'register' | 'about' | 'tutorials' | 'stock' | 'profile';
+import { AuthProvider } from "./contexts/AuthProvider";
+import { useAuth } from "./contexts/useAuth";
+import Login from "./components/Login";
+import { useLoadingDelay } from "./hooks/useLoadingDelay";
+import LoadingPage from "./components/LoadingPage";
 
 function AppContent() {
-  const registerRef = useRef<HTMLDivElement>(null);
-  const aboutRef = useRef<HTMLDivElement>(null);
-  const [currentPage, setCurrentPage] = useState<Page>('home');
-  const { isLoggedIn } = useAuth();
+  const navigateRef = useRef<HTMLDivElement>(null);
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { isAuthenticated } = useAuth();
+  const loading = useLoadingDelay(1000);
 
   // Função para rolar até a seção apropriada
   const scrollToSection = () => {
-    if (isLoggedIn && aboutRef.current) {
-      aboutRef.current.scrollIntoView({ behavior: "smooth" });
-    } else if (!isLoggedIn && registerRef.current) {
-      registerRef.current.scrollIntoView({ behavior: "smooth" });
+    if (navigateRef.current) {
+      navigateRef.current.scrollIntoView({ behavior: "smooth" });
     }
   };
 
   // Função para navegar entre páginas
-  const handleNavigation = (page: Page) => {
-    setCurrentPage(page);
+  const handleNavigation = (page: string) => {
+    navigate(`/${page}`);
   };
 
-  // Renderizar o conteúdo baseado na página atual e estado de login
-  const renderContent = () => {
-    // Se não estiver logado, mostra apenas Index ou Register
-    if (!isLoggedIn) {
-      if (currentPage === 'register') {
-        return <Register onLogin={() => {}} />;
-      }
-      return (
-        <Index 
-          registerRef={registerRef} 
-          aboutRef={aboutRef}
-          isLoggedIn={isLoggedIn}
-          scrollToSection={scrollToSection}
-          onNavigate={handleNavigation}
-        />
-      );
-    }
+  const handleGoHome = () => {
+    navigate("/");
+  }
 
-    // Se estiver logado, mostra as páginas protegidas
-    switch (currentPage) {
-      case 'home':
-        return (
-          <div>
-            <Index 
-              registerRef={registerRef} 
-              aboutRef={aboutRef}
-              isLoggedIn={isLoggedIn}
-              scrollToSection={scrollToSection}
-              onNavigate={handleNavigation}
-            />
-            <About />
-          </div>
-        );
-      case 'about':
-        return <About />;
-      case 'tutorials':
-        return <Tutorials />;
-      case 'stock':
-        return <Stock />;
-      case 'profile':
-        return <Profile />;
-      default:
-        return (
-          <div>
-            <Index 
-              registerRef={registerRef} 
-              aboutRef={aboutRef}
-              isLoggedIn={isLoggedIn}
-              scrollToSection={scrollToSection}
-              onNavigate={handleNavigation}
-            />
-            <About />
-          </div>
-        );
-    }
-  };
+  if (loading) {
+    return <LoadingPage />;
+  }
 
   return (
     <div className="App">
-      <div 
+      <div
         className="min-h-screen min-w-screen container p-0 m-0 bg-lightbg bg-cover bg-center bg-no-repeat"
-        style={{ 
-          backgroundImage: `url(${texture})`, 
-          backgroundBlendMode: 'overlay' 
+        style={{
+          backgroundImage: `url(${texture})`,
+          backgroundBlendMode: "overlay",
         }}
       >
         {/* Header com logo */}
-        <img
-          src={logo}
-          alt="Logo WIP"
-          className="w-20 fixed top-0 left-0 m-4 z-50"
-        />
+        <button
+        onClick={handleGoHome}
+        >
+          <img
+            src={logo}
+            alt="Logo WIP"
+            className="w-20 fixed top-0 left-0 m-4 z-50"
+          />
+        </button>
 
-        {/* Sidebar só aparece quando logado - REMOVA onLogout */}
-        {isLoggedIn && (
-          <Sidebar onNavigate={handleNavigation} currentPage={currentPage} />
+        {/* Sidebar só aparece quando logado */}
+        {isAuthenticated && (
+          <Sidebar
+            onNavigate={handleNavigation}
+            currentPage={location.pathname.replace("/", "")}
+          />
         )}
 
         {/* Conteúdo principal com margem condicional */}
-        <main className={isLoggedIn ? "ml-16" : ""}>
-          {renderContent()}
+        <main className={isAuthenticated ? "ml-16" : ""}>
+          <Routes>
+            {/* Rotas públicas */}
+            <Route
+              path="/"
+              element={
+                <Index
+                  navigateRef={navigateRef}
+                  isLoggedIn={isAuthenticated}
+                  scrollToSection={scrollToSection}
+                  onNavigate={handleNavigation}
+                />
+              }
+            />
+            <Route path="/register" element={<Register />} />
+            <Route path="/login" element={<Login />} />
+
+            {/* Rotas protegidas - só acessíveis quando logado */}
+            {isAuthenticated ? (
+              <>
+                <Route path="/about" element={<About />} />
+                <Route path="/tutorials" element={<Tutorials />} />
+                <Route path="/stock" element={<Stock />} />
+                <Route path="/profile" element={<Profile />} />
+              </>
+            ) : (
+              // Redireciona para home se não estiver autenticado
+              <Route
+                path="*"
+                element={
+                  <Index
+                    navigateRef={navigateRef}
+                  isLoggedIn={isAuthenticated}
+                    scrollToSection={scrollToSection}
+                    onNavigate={handleNavigation}
+                  />
+                }
+              />
+            )}
+          </Routes>
         </main>
 
         {/* Footer sempre visível */}
         <Footer />
 
         {/* Logo no canto inferior direito */}
-        <img 
-          src={rummykub} 
-          alt="Logo da empresa" 
+        <img
+          src={rummykub}
+          alt="Logo da empresa"
           className="w-20 fixed bottom-0 right-0 m-4 z-50"
         />
       </div>
@@ -135,9 +139,11 @@ function AppContent() {
 
 function App() {
   return (
-    <AuthProvider>
-      <AppContent />
-    </AuthProvider>
+    <Router>
+      <AuthProvider>
+        <AppContent />
+      </AuthProvider>
+    </Router>
   );
 }
 

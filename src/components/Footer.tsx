@@ -1,9 +1,10 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+// import { Navigate } from 'react-router-dom';
 import { faInstagram, faLinkedinIn, faYoutube } from '@fortawesome/free-brands-svg-icons';
 
 const Footer = () => {
   return (
-    <footer className="bg-footer text-white py-12 px-6">
+    <footer className="bg-footer text-white py-12 px-6 z-50">
       <div className="max-w-6xl mx-auto grid grid-cols md:grid-cols-2 gap-12">
         {/* WIP Info */}
         <div className="space-y-4">
