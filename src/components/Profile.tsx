@@ -1,15 +1,44 @@
-// src/components/Profile.tsx
 import React from "react";
 import pfp from "../assets/images/user.pfp.png";
-import { useAuth } from '../contexts/useAuth';
+import { useAuth } from "../contexts/useAuth";
 import LoadingPage from "./LoadingPage";
 import { useLoadingDelay } from "../hooks/useLoadingDelay";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const Profile: React.FC = () => {
   const isLoadingDelay = useLoadingDelay(1000);
-  const { currentUser, logout } = useAuth(); 
+  const { currentUser, logout } = useAuth();
   const [isLoggingOut, setIsLoggingOut] = useState(false);
+  const navigate = useNavigate();
+
+  // Função para formatar a data
+  const formatCreationDate = (dateString: string) => {
+    if (!dateString) return "Data não informada";
+
+    try {
+      const date = new Date(dateString);
+      return date.toLocaleDateString("pt-BR", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+      });
+    } catch (error) {
+      return "Data inválida";
+    }
+  };
+
+  const handleEditProfile = () => {
+    navigate("edit");
+  };
+
+  const handleSecurity = () => {
+    navigate("security");
+  };
+
+  const handleFaq = () => {
+    navigate("faq");
+  };
 
   const handleLogout = async () => {
     if (window.confirm("Tem certeza que deseja sair?")) {
@@ -31,15 +60,48 @@ const Profile: React.FC = () => {
       <div className="w-260 grid grid-cols-2 gap-1 p-6 mr-20">
         <div className="col-span-1 flex flex-col items-center bg-placeholder p-6 rounded-lg w-100 h-140 ml-20">
           <img
-            src={pfp}
+            src={
+              currentUser?.profilePicturePath
+                ? `http://localhost:8080/api/users/profile-picture/${currentUser.profilePicturePath}`
+                : pfp
+            }
             alt="User Avatar"
-            className="rounded-full w-24 h-24 mb-2"
+            className="rounded-full w-24 h-24 mb-2 object-cover"
           />
-          <h2 className="text-lg font-semibold">{currentUser?.username || "Seu Nome"}</h2>
-          <p className="text-sm text-gray-600">{currentUser?.email || "usuario@email.com"}</p>
+          <h2 className="text-lg font-semibold">
+            {currentUser?.username || "Seu Nome"}
+          </h2>
+          <p className="text-sm text-gray-600">
+            {currentUser?.email || "usuario@email.com"}
+          </p>
+
+          {/* Novas informações da empresa */}
+          <div className="mt-4 w-full border-t border-gray-300 pt-4">
+            <div className="text-center">
+              <p className="text-sm font-medium text-gray-700">Empresa</p>
+              <p className="text-sm text-gray-600">
+                {currentUser?.companyName || "Não informada"}
+              </p>
+            </div>
+
+            <div className="text-center mt-2">
+              <p className="text-sm font-medium text-gray-700">
+                Data de Criação
+              </p>
+              <p className="text-sm text-gray-600">
+                {currentUser?.creationDate
+                  ? formatCreationDate(currentUser.creationDate)
+                  : "Não informada"}
+              </p>
+            </div>
+          </div>
         </div>
+
         <div className="col-span-1 grid grid-cols-2 gap-5">
-          <button className="bg-placeholder w-60 p-4 rounded-lg flex flex-col items-center justify-center hover:bg-gray-200 transition-colors">
+          <button
+            onClick={handleEditProfile}
+            className="bg-placeholder w-60 p-4 rounded-lg flex flex-col items-center justify-center hover:bg-blue-300 transition-colors"
+          >
             <svg
               className="w-15 h-15"
               fill="none"
@@ -61,7 +123,11 @@ const Profile: React.FC = () => {
             </svg>
             <span className="mt-2">Configurações</span>
           </button>
-          <button className="bg-placeholder w-60 p-4 rounded-lg flex flex-col items-center justify-center hover:bg-gray-200 transition-colors">
+
+          <button
+            onClick={handleSecurity}
+            className="bg-placeholder w-60 p-4 rounded-lg flex flex-col items-center justify-center hover:bg-blue-300 transition-colors"
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               className="w-15 h-15"
@@ -76,7 +142,11 @@ const Profile: React.FC = () => {
             </svg>
             <span className="mt-2">Segurança</span>
           </button>
-          <button className="bg-placeholder w-60 p-4 rounded-lg flex flex-col items-center justify-center hover:bg-gray-200 transition-colors">
+
+          <button
+            onClick={handleFaq}
+            className="bg-placeholder w-60 p-4 rounded-lg flex flex-col items-center justify-center hover:bg-blue-300 transition-colors"
+          >
             <svg
               className="w-15 h-15"
               fill="none"
@@ -92,7 +162,8 @@ const Profile: React.FC = () => {
             </svg>
             <span className="mt-2">FAQ</span>
           </button>
-          <button 
+
+          <button
             onClick={handleLogout}
             className="bg-placeholder text-black w-60 p-4 rounded-lg flex flex-col items-center justify-center hover:bg-red-600 transition-colors"
           >

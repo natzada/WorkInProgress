@@ -1,4 +1,3 @@
-// src/App.tsx
 import { useRef } from "react";
 import {
   BrowserRouter as Router,
@@ -24,6 +23,7 @@ import { useAuth } from "./contexts/useAuth";
 import Login from "./components/Login";
 import { useLoadingDelay } from "./hooks/useLoadingDelay";
 import LoadingPage from "./components/LoadingPage";
+import ProfileConfig from "./components/ProfileConfig";
 
 function AppContent() {
   const navigateRef = useRef<HTMLDivElement>(null);
@@ -32,12 +32,49 @@ function AppContent() {
   const { isAuthenticated } = useAuth();
   const loading = useLoadingDelay(1000);
 
-  // Função para rolar até a seção apropriada
-  const scrollToSection = () => {
-    if (navigateRef.current) {
-      navigateRef.current.scrollIntoView({ behavior: "smooth" });
-    }
-  };
+// Easing suave
+function easeInOutCubic(t: number) {
+  return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+}
+
+// Descobre o container rolável correto
+function getScrollElement(): HTMLElement {
+  return (document.scrollingElement as HTMLElement) || document.documentElement;
+}
+
+// Faz scroll animado manualmente (independe do suporte nativo)
+function animateScrollTo(targetY: number, duration = 500) {
+  const el = getScrollElement();
+  const startY = el.scrollTop;
+  const delta = targetY - startY;
+  if (Math.abs(delta) < 1) return;
+
+  const start = performance.now();
+
+  function step(now: number) {
+    const t = Math.min(1, (now - start) / duration);
+    const eased = easeInOutCubic(t);
+    el.scrollTop = startY + delta * eased;
+    if (t < 1) requestAnimationFrame(step);
+  }
+
+  requestAnimationFrame(step);
+}
+
+const scrollToSection = () => {
+  const el = navigateRef.current;
+  if (!el) return;
+
+  // Se tiver header fixo real, coloque a altura aqui
+  const HEADER_OFFSET = 0;
+
+  // Espera um tick p/ o layout estabilizar (fonts, imagens, etc.)
+  requestAnimationFrame(() => {
+    const rect = el.getBoundingClientRect();
+    const target = rect.top + (window.pageYOffset || document.documentElement.scrollTop) - HEADER_OFFSET;
+    animateScrollTo(target, 600);
+  });
+};
 
   // Função para navegar entre páginas
   const handleNavigation = (page: string) => {
@@ -105,6 +142,8 @@ function AppContent() {
                 <Route path="/tutorials" element={<Tutorials />} />
                 <Route path="/stock" element={<Stock />} />
                 <Route path="/profile" element={<Profile />} />
+                <Route path="profile/edit" element={<ProfileConfig />} />
+
               </>
             ) : (
               // Redireciona para home se não estiver autenticado

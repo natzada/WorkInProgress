@@ -16,6 +16,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setLoading(false);
   }, []);
 
+  const updateUser = (updatedUser: User) => {
+    setCurrentUser(updatedUser);
+    localStorage.setItem('user', JSON.stringify(updatedUser));
+  };
+
  const login = async (email: string, password: string) => {
   try {
     const response = await fetch('http://localhost:8080/api/auth/signin', {
@@ -111,6 +116,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     login,
     register,
     logout,
+    updateUser,
     isAuthenticated: !!currentUser
   };
 

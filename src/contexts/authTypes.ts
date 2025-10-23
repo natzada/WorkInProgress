@@ -1,8 +1,11 @@
 export interface User {
-  token: string;
+  id: number;
   username: string;
-  name?: string;
-  email?: string;
+  email: string;
+  companyName?: string;
+  creationDate?: string;
+  profilePicturePath?: string;
+  preferences?: string;
 }
 
 export interface AuthContextType {
@@ -17,5 +20,6 @@ export interface AuthContextType {
     dataCriacao: string
   ) => Promise<{ success: boolean; error?: string }>;
   logout: () => void;
+  updateUser: (updatedUser: User) => void;
   isAuthenticated: boolean;
 }
