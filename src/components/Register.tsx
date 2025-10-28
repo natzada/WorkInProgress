@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-// src/components/Register.tsx - VERSÃO CORRIGIDA MANTENDO ESTILO ORIGINAL
 import { useState } from "react";
 import { useAuth } from "../contexts/useAuth";
 import { useNavigate } from "react-router-dom";

@@ -23,6 +23,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
  const login = async (email: string, password: string) => {
   try {
+    console.log('🔄 Tentando login para:', email);
+    
     const response = await fetch('http://localhost:8080/api/auth/signin', {
       method: 'POST',
       headers: {
@@ -31,33 +33,56 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       body: JSON.stringify({ email, password }),
     });
 
+    console.log('📡 Status da resposta:', response.status);
+    
     if (response.ok) {
-      const userData = await response.json();
-      // Garante que o email esteja incluído
+      const responseData = await response.json();
+      console.log('🎯 RESPOSTA COMPLETA:', responseData);
+      
+      // VERIFICAÇÃO CRÍTICA
+      if (!responseData.id) {
+        console.error('🚨 ERRO CRÍTICO: ID não veio do backend!');
+        console.error('Estrutura recebida:', Object.keys(responseData));
+        return { 
+          success: false, 
+          error: 'ID não recebido do servidor. Estrutura: ' + JSON.stringify(responseData) 
+        };
+      }
+
       const user = {
-        ...userData,
-        email: userData.email || email // Usa o email da resposta ou o email do login
+        id: responseData.id,
+        name: responseData.name || '',
+        email: responseData.email || email,
+        companyName: responseData.companyName || '',
+        creationDate: responseData.creationDate || '',
+        profilePicturePath: responseData.profilePicturePath || '',
+        preferences: responseData.preferences || '',
+        token: responseData.token || 'mock-token'
       };
-      console.log('User with email:', user);
+      
+      console.log('✅ USUÁRIO CRIADO COM SUCESSO! ID:', user.id);
+      
       setCurrentUser(user);
       localStorage.setItem('user', JSON.stringify(user));
       localStorage.setItem('token', user.token);
       return { success: true };
     } else {
       const error = await response.text();
+      console.error('❌ Login falhou:', error);
       return { 
         success: false, 
         error: error || 'Erro no login' 
       };
     }
   } catch (error) {
-    console.error('Login error:', error);
+    console.error('💥 Erro de conexão:', error);
     return { 
       success: false, 
       error: 'Erro de conexão' 
     };
   }
 };
+
   const register = async (
     name: string, 
     email: string, 

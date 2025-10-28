@@ -23,3 +23,15 @@ export interface AuthContextType {
   updateUser: (updatedUser: User) => void;
   isAuthenticated: boolean;
 }
+
+export interface LoginResponse {
+  id?: number;
+  userId?: number; 
+  name: string;
+  email: string;
+  nomeEmpresa?: string;
+  dataCriacao?: string;
+  profilePicturePath?: string;
+  preferences?: string;
+  token: string;
+}
