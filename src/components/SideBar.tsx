@@ -14,7 +14,14 @@ interface IconProps {
   className?: string;
 }
 
-type Page = "home" | "register" | "about" | "tutorials" | "stock" | "profile";
+type Page =
+  | "home"
+  | "register"
+  | "about"
+  | "tutorials"
+  | "stock"
+  | "profile"
+  | "orders";
 
 const MenuIcon: FC<IconProps> = ({
   size = 24,
@@ -100,18 +107,18 @@ const TutoIcon: FC<IconProps> = ({
   className,
 }) => (
   <svg
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 24 24"
-      width={size}
-      height={size}
-      fill="none"
-      className={className}
-    >
-      <path
-        fill={color}
-        d="M9 7v8l7-4zm12-4H3c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h5v2h8v-2h5c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2m0 14H3V5h18z"
-      ></path>
-    </svg>
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 24 24"
+    width={size}
+    height={size}
+    fill="none"
+    className={className}
+  >
+    <path
+      fill={color}
+      d="M9 7v8l7-4zm12-4H3c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h5v2h8v-2h5c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2m0 14H3V5h18z"
+    ></path>
+  </svg>
 );
 
 // StockIcon Component
@@ -162,31 +169,31 @@ const SidebarIcon: FC<SidebarIconProps> = ({
 }) => {
   return (
     <div
-  className={`relative flex items-center h-12 mt-2 mb-2 mx-auto rounded-lg transition-all duration-300 ease-linear cursor-pointer group ${
-    isActive
-      ? "bg-black text-icon shadow-lg"
-      : "text-back hover:bg-black hover:text-icon" // hover:text-icon aqui no container
-  } ${isExpanded ? "w-full px-4 justify-start" : "w-12 justify-center"}`}
-  onClick={onClick}
->
-  <div className="flex items-center">
-    {icon}
-    {isExpanded && (
-      <span
-        className={`ml-4 text-sm font-medium ${
-          isActive ? "text-icon" : "group-hover:text-icon"
-        }`}
-      >
-        {tooltip}
-      </span>
-    )}
-  </div>
-  {!isExpanded && (
-    <span className="absolute left-14 text-black text-xs rounded-md px-2 py-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap">
-      {tooltip}
-    </span>
-  )}
-</div>
+      className={`relative flex items-center h-12 mt-2 mb-2 mx-auto rounded-lg transition-all duration-300 ease-linear cursor-pointer group ${
+        isActive
+          ? "bg-black text-icon shadow-lg"
+          : "text-back hover:bg-black hover:text-icon" // hover:text-icon aqui no container
+      } ${isExpanded ? "w-full px-4 justify-start" : "w-12 justify-center"}`}
+      onClick={onClick}
+    >
+      <div className="flex items-center">
+        {icon}
+        {isExpanded && (
+          <span
+            className={`ml-4 text-sm font-medium ${
+              isActive ? "text-icon" : "group-hover:text-icon"
+            }`}
+          >
+            {tooltip}
+          </span>
+        )}
+      </div>
+      {!isExpanded && (
+        <span className="absolute left-14 text-black text-xs rounded-md px-2 py-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap">
+          {tooltip}
+        </span>
+      )}
+    </div>
   );
 };
 
@@ -208,10 +215,6 @@ const Sidebar: FC<SidebarProps> = ({ onNavigate, currentPage }) => {
     { id: "stock", icon: <StockIcon />, tooltip: "Estoque" },
   ];
 
-  const handleStoreClick = () => {
-    window.open("https://www.assai.com.br/", "_blank");
-  };
-
   const handleMenuClick = () => {
     setIsExpanded(!isExpanded);
   };
@@ -222,6 +225,7 @@ const Sidebar: FC<SidebarProps> = ({ onNavigate, currentPage }) => {
       profile: "profile",
       tutorials: "tutorials",
       stock: "stock",
+      store: "orders",
     };
 
     if (pageMap[itemId]) {
@@ -247,8 +251,6 @@ const Sidebar: FC<SidebarProps> = ({ onNavigate, currentPage }) => {
               onClick={() => {
                 if (item.id === "menu") {
                   handleMenuClick();
-                } else if (item.id === "store") {
-                  handleStoreClick();
                 } else {
                   handleItemClick(item.id);
                 }

@@ -3,8 +3,11 @@ import React, { useState, useEffect, useCallback } from "react";
 import { productService, type Product } from "../services/productService";
 import LoadingPage from "./LoadingPage";
 import { useLoadingDelay } from "../hooks/useLoadingDelay";
+import { useAuth } from "../contexts/useAuth";
+
 
 const Stock: React.FC = () => {
+  const { isAuthenticated, currentUser } = useAuth();
   const isLoadingDelay = useLoadingDelay(1000);
   const [products, setProducts] = useState<Product[]>([]);
   const [quantities, setQuantities] = useState<{ [key: number]: number }>({});
@@ -16,11 +19,14 @@ const Stock: React.FC = () => {
   });
   const [loadingButtons, setLoadingButtons] = useState<{ [key: number]: boolean }>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState<string>("");
 
-  const userId = 1;
+  // Obter userId do usuário autenticado
+  const userId = currentUser?.id || 1;
 
   const loadProducts = useCallback(async () => {
     try {
+      console.log("📦 Carregando produtos para usuário:", userId);
       const userProducts = await productService.getProductsByUser(userId);
       const sortedProducts = userProducts.sort((a, b) => a.id - b.id);
       setProducts(sortedProducts);
@@ -33,16 +39,15 @@ const Stock: React.FC = () => {
       
     } catch (error) {
       console.error("Error loading products:", error);
+      setError("Erro ao carregar produtos. Verifique sua conexão.");
     }
   }, [userId]);
 
   useEffect(() => {
-    if (!isLoadingDelay) {
+    if (!isLoadingDelay && isAuthenticated) {
       loadProducts();
     }
-  }, [isLoadingDelay, loadProducts]);
-
-  // 🔥 ADICIONE TODAS ESTAS FUNÇÕES QUE ESTAVAM FALTANDO:
+  }, [isLoadingDelay, loadProducts, isAuthenticated]);
 
   const handleAdd = async (id: number) => {
     setLoadingButtons(prev => ({ ...prev, [id]: true }));
@@ -57,9 +62,12 @@ const Stock: React.FC = () => {
           ...product,
           quantity: newQuantity,
         });
+        // Recarregar produtos para garantir sincronização
+        await loadProducts();
       }
     } catch (error) {
       console.error("Error updating product:", error);
+      setError("Erro ao atualizar produto");
       setQuantities((prev) => ({ ...prev, [id]: quantities[id] }));
     } finally {
       setLoadingButtons(prev => ({ ...prev, [id]: false }));
@@ -79,9 +87,12 @@ const Stock: React.FC = () => {
           ...product,
           quantity: newQuantity,
         });
+        // Recarregar produtos para garantir sincronização
+        await loadProducts();
       }
     } catch (error) {
       console.error("Error updating product:", error);
+      setError("Erro ao atualizar produto");
       setQuantities((prev) => ({ ...prev, [id]: quantities[id] }));
     } finally {
       setLoadingButtons(prev => ({ ...prev, [id]: false }));
@@ -89,6 +100,10 @@ const Stock: React.FC = () => {
   };
 
   const handleAddItem = () => {
+    if (!isAuthenticated) {
+      setError("Faça login para adicionar produtos");
+      return;
+    }
     setShowForm(true);
     setNewProduct({
       name: "",
@@ -107,43 +122,81 @@ const Stock: React.FC = () => {
   const handleFormCancel = () => {
     setShowForm(false);
     setNewProduct({ name: "", quantity: 0, expirationDate: "" });
+    setError("");
   };
 
   const handleFormSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
+  e.preventDefault();
+  setIsSubmitting(true);
+  setError("");
 
-    if (!newProduct.name.trim()) {
-      alert("Por favor, insira um nome para o produto");
-      setIsSubmitting(false);
-      return;
-    }
+  console.log("🆕 INICIANDO CRIAÇÃO DE PRODUTO");
+  console.log("📝 DADOS DO FORMULÁRIO:", newProduct);
+  console.log("👤 ID DO USUÁRIO LOGADO:", userId);
 
-    const productToCreate: Omit<Product, "id"> = {
-      name: newProduct.name,
-      quantity: newProduct.quantity,
-      expirationDate: newProduct.expirationDate,
-      userId: userId,
-    };
+  if (!isAuthenticated) {
+    setError("Faça login para adicionar produtos");
+    setIsSubmitting(false);
+    return;
+  }
 
-    try {
-      const createdProduct = await productService.createProduct(productToCreate);
-      if (createdProduct) {
-        setProducts((prev) => [...prev, createdProduct]);
-        setQuantities((prev) => ({
-          ...prev,
-          [createdProduct.id]: newProduct.quantity,
-        }));
-        setShowForm(false);
-        setNewProduct({ name: "", quantity: 0, expirationDate: "" });
-      }
-    } catch (error) {
-      console.error("Error creating product:", error);
-      alert("Erro ao criar produto");
-    } finally {
-      setIsSubmitting(false);
-    }
+  if (!newProduct.name.trim()) {
+    setError("Por favor, insira um nome para o produto");
+    setIsSubmitting(false);
+    return;
+  }
+
+  const productToCreate: Omit<Product, "id"> = {
+    name: newProduct.name,
+    quantity: newProduct.quantity,
+    expirationDate: newProduct.expirationDate,
+    userId: userId, // ← GARANTIR QUE userId ESTÁ SENDO ENVIADO
   };
+
+  console.log("📤 ENVIANDO PARA API:", productToCreate);
+
+  try {
+    const createdProduct = await productService.createProduct(productToCreate);
+    console.log("✅ PRODUTO CRIADO NO BACKEND:", createdProduct);
+    
+    if (createdProduct) {
+      console.log("🔄 ATUALIZANDO ESTADO LOCAL");
+      setShowForm(false);
+      setNewProduct({ name: "", quantity: 0, expirationDate: "" });
+      
+      // Recarregar produtos para garantir sincronização
+      console.log("🔄 RECARREGANDO PRODUTOS...");
+      await loadProducts();
+      console.log("✅ PRODUTOS RECARREGADOS APÓS CRIAÇÃO");
+    }
+  } catch (error) {
+    console.error("❌ ERRO AO CRIAR PRODUTO:", error);
+    setError("Erro ao criar produto. Verifique sua conexão.");
+  } finally {
+    setIsSubmitting(false);
+  }
+};
+
+  // Se não estiver autenticado, mostrar mensagem
+  if (!isAuthenticated) {
+    return (
+      <div className="min-h-screen flex justify-center items-center p-20">
+        <div className="bg-placeholder p-8 rounded-lg font-sans w-300 text-center">
+          <h1 className="text-black font-extrabold text-5xl mb-6">
+            🔒 Acesso Restrito
+          </h1>
+          <p className="text-gray-700 text-2xl mb-4">
+            Faça login para acessar o estoque.
+          </p>
+          <div className="mt-6 p-4 bg-yellow-50 rounded-lg border border-yellow-200">
+            <p className="text-yellow-800 text-lg">
+              <strong>Status:</strong> Usuário não identificado
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   if (isLoadingDelay) {
     return <LoadingPage />;
@@ -163,6 +216,13 @@ const Stock: React.FC = () => {
             +
           </button>
         </div>
+
+        {/* Mensagem de erro */}
+        {error && (
+          <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-lg">
+            <p className="text-red-700 text-center">{error}</p>
+          </div>
+        )}
         
         {/* Formulário de Novo Produto */}
         {showForm && (
@@ -247,6 +307,7 @@ const Stock: React.FC = () => {
         <ul>
           {products.map((product, index) => {
             const isLoadingButton = loadingButtons[product.id];
+            const currentQuantity = quantities[product.id] || 0;
             
             return (
               <li
@@ -277,11 +338,11 @@ const Stock: React.FC = () => {
                     )}
                   </button>
                   <span className="px-2 py-1 font-semibold min-w-8 text-center">
-                    {quantities[product.id] || 0}
+                    {currentQuantity}
                   </span>
                   <button
                     onClick={() => handleDelete(product.id)}
-                    disabled={isLoadingButton || (quantities[product.id] || 0) <= 0}
+                    disabled={isLoadingButton || currentQuantity <= 0}
                     className="px-2.5 py-1 text-white font-bold bg-division rounded-full hover:bg-division/70 transition-colors disabled:opacity-50 disabled:cursor-not-allowed min-w-8 h-8 flex items-center justify-center"
                   >
                     {isLoadingButton ? (
@@ -298,7 +359,8 @@ const Stock: React.FC = () => {
         
         {products.length === 0 && !showForm && (
           <div className="text-center py-8 text-gray-600">
-            Nenhum produto cadastrado. Clique no botão "+" para adicionar.
+            <p className="text-xl mb-4">Nenhum produto cadastrado.</p>
+            <p className="text-lg">Clique no botão "+" para adicionar seu primeiro produto.</p>
           </div>
         )}
       </div>

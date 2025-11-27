@@ -29,7 +29,7 @@ export default function Index({ navigateRef, isLoggedIn, scrollToSection }: Inde
   };
 
   if (isLoadingDelay) {
-    <LoadingPage />;
+   return <LoadingPage />;
   }
 
   return (

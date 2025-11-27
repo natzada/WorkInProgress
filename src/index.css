@@ -8,6 +8,7 @@ html {
   min-height: screen;
   scrollbar-width: thin; 
   scrollbar-color: #40516d #95b1dd;
+  scroll-behavior: smooth;
 }
 
 /* Chrome, Edge, Safari */
