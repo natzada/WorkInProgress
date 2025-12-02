@@ -12,32 +12,32 @@ const FAQ: React.FC = () => {
   const [faqs, setFaqs] = useState<FAQItem[]>([
     {
       id: 1,
-      question: "Como posso criar uma conta?",
-      answer: "Para criar uma conta, clique no botão 'Registrar' no canto superior direito, preencha seus dados e confirme seu email.",
+      question: "Posso criar um fornecedor para mais de um produto?",
+      answer: "Sim. No entanto, o será necessário realizar mais de um pedido para esse fornecedor, já que, por organização, optamos por separar os pedidos por produto e não por fornecedor.",
       isOpen: false
     },
     {
       id: 2,
-      question: "Esqueci minha senha, o que fazer?",
-      answer: "Clique em 'Esqueci minha senha' na página de login e siga as instruções para redefinir sua senha por email.",
+      question: "Caso eu expanda o meu negócio e contrate funcionários para cuidar do sistema, seria possível cadastrar mais de um funcionário para gerir a empresa?",
+      answer: "No momento não. Por enquanto, é recomendado que crie apenas um acesso (indívidual seu ou que englobe toda a empresa), mas, esta é uma função que pretendemos adicionar ao sistema.",
       isOpen: false
     },
     {
       id: 3,
-      question: "Quais são os métodos de pagamento aceitos?",
-      answer: "Aceitamos cartão de crédito, débito, PIX e boleto bancário.",
+      question: "O fornecedor também pode enviar emails pelo sistema para alterar o status do pedido?",
+      answer: "Ainda não, mas, assim como outras funcionalidades, a intermediação dos fornecedores com os empreendedores a partir do nosso sistema é uma adição futura.",
       isOpen: false
     },
     {
       id: 4,
-      question: "Como cancelar minha assinatura?",
-      answer: "Acesse 'Configurações da Conta' > 'Assinatura' e clique em 'Cancelar Assinatura'.",
+      question: "O Link do atacadista está disponível na minha localização?",
+      answer: "Acreditamos que o ASSAÍ atacadista está disponível para todo o Brasil, mas, recomendamos que consulte no site deles.",
       isOpen: false
     },
     {
       id: 5,
       question: "O suporte está disponível 24/7?",
-      answer: "Sim, nosso suporte está disponível 24 horas por dia, 7 dias por semana via chat e email.",
+      answer: "Sim, nosso suporte está disponível 24 horas por dia, 7 dias por semana, via email.",
       isOpen: false
     }
   ]);
@@ -190,7 +190,7 @@ const FAQ: React.FC = () => {
         </p>
         <button 
           onClick={handleForm} 
-          className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-8 rounded-lg transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
+          className="bg-black hover:bg-black/80 text-white font-semibold py-3 px-8 rounded-lg transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-black/60 focus:ring-opacity-50"
         >
           Entrar em Contato
         </button>
@@ -322,7 +322,7 @@ const FAQ: React.FC = () => {
                     </button>
                     <button
                       type="submit"
-                      className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="flex-1 px-4 py-2 bg-black text-white rounded-md hover:bg-black/80 transition-colors focus:outline-none focus:ring-2 focus:ring-black/60 disabled:opacity-50 disabled:cursor-not-allowed"
                       disabled={isSubmitting}
                     >
                       {isSubmitting ? 'Enviando...' : 'Enviar Mensagem'}

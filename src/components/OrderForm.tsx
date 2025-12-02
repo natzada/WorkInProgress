@@ -185,6 +185,8 @@ const OrderForm: React.FC = () => {
         >
           {isSubmitting ? 'Criando Pedido...' : 'Criar Pedido'}
         </button>
+
+        <span>Ou, caso prefira, acesse um dos melhores <a href="https://www.assai.com.br/" className='text-link underline'>atacadista</a> do país.</span>
       </form>
     </div>
   );
