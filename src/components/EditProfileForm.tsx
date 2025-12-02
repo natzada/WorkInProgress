@@ -108,7 +108,7 @@ const EditProfileForm: React.FC<EditProfileFormProps> = ({
 
       <form onSubmit={handleSubmit} className="space-y-6">
         <div className="flex items-center space-x-6">
-          <div className="flex-shrink-0">
+          <div className="shrink-0">
             <img
               src={getProfilePictureUrl()}
               alt="Preview"
